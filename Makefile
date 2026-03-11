@@ -9,10 +9,11 @@ QF:=RUSTFLAGS="-Awarnings"
 -include ${ROOT_DIR}/script/python.mk
 
 echo:
-	@echo ${__TECHNO_PROJECT_FILE}
-	@echo ${__VERSION}
+	@echo VERSION: ${__VERSION_FULL}
+	@echo TAG: ${__TAG}
 
-build:
+build: inc_build
 	mkdir -p ${ROOT_DIR}/aloecrypt/.bin
 	(cd ../aloecrypt_plugin && ${QF} ${BUILD_CMD} --profile=release)
 	wasm-opt --enable-bulk-memory --enable-mutable-globals --enable-sign-ext -Oz ${RELEASE_BIN} -o ${ROOT_DIR}/aloecrypt/.bin/aloecrypt_plugin.wasm
+	

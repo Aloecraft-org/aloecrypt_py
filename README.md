@@ -6,8 +6,12 @@
 
 **A post-quantum secure messaging library for Python**
 
-[![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/aloecraft/aloecrypt_plugin)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/aloecraft/aloecrypt_py)
+[![CI](https://github.com/aloecraft/aloecrypt_py/actions/workflows/ci.yml/badge.svg)](https://github.com/aloecraft/aloecrypt_py/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/aloecrypt)](https://pypi.org/project/aloecrypt/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/aloecrypt)](https://pypi.org/project/aloecrypt/)
+[![Python versions](https://img.shields.io/pypi/pyversions/aloecrypt)](https://pypi.org/project/aloecrypt/)
+[![License](https://img.shields.io/pypi/l/aloecrypt)](https://github.com/aloecraft/aloecrypt_py/blob/main/LICENSE)
 
 </div>
 
