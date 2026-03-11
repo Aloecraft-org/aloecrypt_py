@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="docs/icon.png" style="height:96px; width:96px;"/>
+<img src="https://raw.githubusercontent.com/Aloecraft-org/aloecrypt_py/main/docs/icon.png" style="height:96px; width:96px;"/>
 
 **A post-quantum secure messaging library for Python**
 
