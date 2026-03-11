@@ -1,0 +1,9 @@
+.nogit
+.dump
+.xtrpatch
+x.patch
+x.md
+/target
+dist
+**/__pycache__
+**/*.egg-info

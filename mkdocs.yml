@@ -1,0 +1,55 @@
+site_name: Aloecrypt
+site_url: https://aloecrypt-py.aloecraft.org
+site_description: Post-quantum secure messaging library for Python
+site_author: Michael Godfrey
+
+repo_name: aloecraft/aloecrypt_py
+repo_url: https://github.com/aloecraft/aloecrypt_py
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: teal
+      accent: cyan
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - toc.integrate
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: false
+            show_root_heading: true
+            show_signature_annotations: true
+            members_order: source
+
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - API Reference:
+    - Session: api/session.md
+    - Builder: api/builder.md
+    - Signatory: api/signatory.md
+    - KEM: api/kem.md
+    - Constants: api/consts.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - toc:
+      permalink: true
+
+use_directory_urls: true
+docs_dir: docs
+site_dir: site

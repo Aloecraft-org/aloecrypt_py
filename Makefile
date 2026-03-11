@@ -1,0 +1,18 @@
+ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+__TECHNO_PROJECT_FILE:=${ROOT_DIR}/.technoproj
+
+RELEASE_BIN:=${ROOT_DIR}/../aloecrypt_plugin/target/wasm32-wasip1/release/aloecrypt_plugin.wasm
+BUILD_CMD:=cargo build --target=wasm32-wasip1
+QF:=RUSTFLAGS="-Awarnings"
+
+-include ${ROOT_DIR}/script/version.mk
+-include ${ROOT_DIR}/script/python.mk
+
+echo:
+	@echo ${__TECHNO_PROJECT_FILE}
+	@echo ${__VERSION}
+
+build:
+	mkdir -p ${ROOT_DIR}/aloecrypt/.bin
+	(cd ../aloecrypt_plugin && ${QF} ${BUILD_CMD} --profile=release)
+	wasm-opt --enable-bulk-memory --enable-mutable-globals --enable-sign-ext -Oz ${RELEASE_BIN} -o ${ROOT_DIR}/aloecrypt/.bin/aloecrypt_plugin.wasm

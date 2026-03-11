@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aloecrypt"
+version = "0.1.0" 
+description = "A Cross Platform Post-Quantum Secure Crypto Library"
+readme = "README.md"
+authors = [
+    {name = "Michael Godfrey", email = "michael@aloecraft.org"}
+]
+license = {text = "Apache-2.0"}
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Rust",
+    "Operating System :: OS Independent",
+]
+keywords = ["cryptography", "post-quantum", "pqc", "ml-kem", "ml-dsa",  "kyber", "dilithium", 
+            "key-encapsulation", "digital-signature", 
+            "webassembly", "wasm"]
+dependencies = [
+    "msgpack", "pydantic", "extism"
+]
+
+[tool.setuptools.package-data]
+aloecrypt = [".bin/*.wasm"]
+
+[project.urls]
+Homepage = "https://aloecrypt-py.aloecraft.org/"
+Repository = "https://github.com/aloecraft/aloecrypt_py"
+Documentation = "https://aloecrypt-py.aloecraft.org/"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+]
+docs = [
+    "mkdocs-material",
+    "mkdocstrings[python]",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["aloecrypt*"]
