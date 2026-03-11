@@ -19,9 +19,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        working-directory: aloecrypt_py
         run: pip install ".[test]"
 
       - name: Run tests
-        working-directory: aloecrypt_py
         run: pytest test/
