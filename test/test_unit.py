@@ -37,7 +37,6 @@ def random_bytes(n: int) -> bytes:
 def make_signer() -> DilithiumSigner:
     return DilithiumSigner.new()
 
-
 def make_session_pair() -> tuple[AloecryptSession, AloecryptSession]:
     """
     Build a symmetric pair of sessions from fresh random secrets,
@@ -349,7 +348,18 @@ class TestPEM:
         kyber_pub = loaded_kyber.to_public()
         kyber_pub_pem = kyber_pub.to_pem()
         loaded_kyber_pub = KyberPublicKEM.from_pem(kyber_pub_pem)
+        
+        sig_verify_result = verifier.verify(loaded_verifier.signing_material(), loaded_verifier.dlt_sig_bytes )
+        print("verifier pubkey == loaded_verifier pubkey:", verifier.dlt_pubkey == loaded_verifier.dlt_pubkey)
+        print("signing_material match:", verifier.signing_material() == loaded_verifier.signing_material())
+        print("sig len before PEM:", len(verifier.dlt_sig_bytes))
+        print("sig len after PEM:", len(loaded_verifier.dlt_sig_bytes))
+        print("sig bytes match:", verifier.dlt_sig_bytes == loaded_verifier.dlt_sig_bytes)
+        print(f"       verifier.dlt_sig_bytes: {verifier.dlt_sig_bytes.hex()[0:10]}")
+        print(f"loaded_verifier.dlt_sig_bytes: {loaded_verifier.dlt_sig_bytes.hex()[0:10]}")
+        print(f"            sig_verify_result: {sig_verify_result}")
 
+        
         assert verifier.verify(
             loaded_verifier.signing_material(), loaded_verifier.dlt_sig_bytes
         )

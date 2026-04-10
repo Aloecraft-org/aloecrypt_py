@@ -35,13 +35,58 @@ def _pack(*args):
     """Pack one or more arguments for the plugin."""
     if len(args) == 1:
         return msgpack.packb(_dump(args[0]))
-    return msgpack.packb(tuple(_dump(a) for a in args))
+    # Each argument is independently msgpack-serialized into a bytes blob.
+    # The outer array is then [bin, bin, bin, ...] which Rust deserializes
+    # as Vec<Vec<u8>>, then each blob is deserialized individually.
+    blobs = []
+    for a in args:
+        blob = msgpack.packb(_dump(a))
+        blobs.append(blob)  # msgpack.packb always returns bytes
+    return msgpack.packb(blobs, use_bin_type=True)
 
 
 def _unpack(result):
     """Unpack plugin result and normalise bytes->list, bytes-keys->str."""
     return _normalize(msgpack.unpackb(result))
 
+
+class _VarBytes:
+    """Wrapper to mark bytes as variable-length (needs length prefix)."""
+    def __init__(self, data: bytes):
+        self.data = data
+
+class _VarStr:
+    """Wrapper to mark str as variable-length (needs length prefix)."""
+    def __init__(self, data: str):
+        self.data = data
+
+def _wire_pack(*args):
+    """Pack arguments as concatenated wire bytes for the plugin."""
+    buf = bytearray()
+    for a in args:
+        if hasattr(a, 'to_wire_bytes'):
+            buf.extend(a.to_wire_bytes())
+        elif isinstance(a, _VarBytes):
+            buf.extend(len(a.data).to_bytes(4, 'little'))
+            buf.extend(a.data)
+        elif isinstance(a, _VarStr):
+            encoded = a.data.encode('utf-8')
+            buf.extend(len(encoded).to_bytes(4, 'little'))
+            buf.extend(encoded)
+        elif isinstance(a, bool):
+            buf.append(int(a))
+        elif isinstance(a, int):
+            buf.extend(a.to_bytes(8, 'little', signed=True))
+        elif isinstance(a, bytes):
+            # Fixed-size bytes (byte aliases, timestamps, etc.) — no length prefix
+            buf.extend(a)
+        elif isinstance(a, str):
+            encoded = a.encode('utf-8')
+            buf.extend(len(encoded).to_bytes(4, 'little'))
+            buf.extend(encoded)
+        else:
+            raise TypeError(f"Cannot wire-pack type: {type(a)}")
+    return bytes(buf)
 
 class _PluginModel(BaseModel):
     model_config = {"frozen": True}
@@ -55,7 +100,17 @@ class _PluginModel(BaseModel):
 
 
 class _Plugin:
+    _instance = None
+
+    def __new__(cls):
+        # Singleton so we only load aloecrypt_plugin.wasm once
+        if cls._instance is None:
+            cls._instance = super(_Plugin, cls).__new__(cls)
+        return cls._instance
+    
     def __init__(self):
+        if hasattr(self, '_plugin'):
+            return
         ref = importlib.resources.files("aloecrypt") / ".bin/aloecrypt_plugin.wasm"
         with importlib.resources.as_file(ref) as wasm_path:
             with open(wasm_path, "rb") as f:
